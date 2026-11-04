@@ -1,0 +1,189 @@
+import json
+cs=json.load(open('audit/coffees.json'))
+feat=[c for c in cs if c['notes']]
+def taste(n):
+    n=n.lower()
+    if any(k in n for k in ['chocolate','cacao','caramel','hazelnut','brown sugar','oak','honey','coconut','butterscotch']): return 'earthy'
+    if any(k in n for k in ['blossom','jasmine','tea','floral']): return 'floral'
+    return 'fruity'
+data=[{'t':c['title'].replace(' - ',' - ').replace(' – ',' - '),'p':float(c['price']),'img':c['img']+'?width=700','notes':c['notes'],'proc':c['process'],'roast':c['roast'],'origin':c['origin'],'taste':taste(c['notes']),'h':c['handle']} for c in feat]
+china=[d for d in data if d['h']=='china'][0]
+cards="".join(f'''<div class="card"><a class="ph"><img src="{d['img']}" alt="{d['t']}" loading="lazy"></a><div class="cb"><div class="chips"><span>{d['roast']} roast</span><span>{d['proc'].split(' · ')[0]}</span></div><div class="tt">{d['t']}</div><div class="nt">{d['notes']}</div><div class="pr">${d['p']:.2f} USD <span>12 oz</span></div><button class="qa">ADD TO CART</button></div></div>''' for d in data[:6])
+html=f'''<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dueling Rabbits Coffee — redesign concept</title><meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&display=swap" rel="stylesheet">
+<style>
+  :root {{ --ink:#121212; --mut:#666; --line:#e6e6e6; --or:#f26522; --soft:#f6f6f6; }}
+  * {{ box-sizing:border-box; }} html {{ scroll-behavior:smooth; }}
+  body {{ margin:0; background:#fff; color:var(--ink); font:16px/1.6 "Fraunces", Georgia, serif; }}
+  .wrap {{ max-width:1200px; margin:0 auto; padding:0 24px; }}
+  .anton {{ font-family:"Anton", Impact, sans-serif; text-transform:uppercase; letter-spacing:.02em; font-weight:400; }}
+  header.top {{ position:sticky; top:0; z-index:20; background:#fff; border-bottom:1px solid var(--line); }}
+  header.top .wrap {{ display:flex; align-items:center; justify-content:space-between; height:58px; font-size:14px; }}
+  header.top .brand {{ font-family:"Anton", Impact, sans-serif; text-transform:uppercase; letter-spacing:.04em; font-size:16px; }} header.top .brand span {{ font-family:"Fraunces", serif; text-transform:none; letter-spacing:0; color:var(--mut); font-size:14px; margin-left:8px; }}
+  header.top nav a {{ color:var(--ink); text-decoration:none; margin-left:22px; font-size:14px; }}
+  .bar {{ background:var(--ink); color:#fff; text-align:center; font-size:12px; letter-spacing:.08em; text-transform:uppercase; padding:9px; font-family:"Anton", Impact, sans-serif; }}
+  .hero {{ padding:56px 0 36px; }}
+  .eyebrow {{ font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--mut); font-family:"Anton", Impact, sans-serif; }}
+  h1 {{ font-family:"Anton", Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:64px; line-height:1; margin:12px 0 16px; letter-spacing:.01em; }} h1 em {{ font-style:normal; color:var(--or); }}
+  .lead {{ font-size:19px; color:#333; max-width:760px; font-style:italic; }}
+  .stats {{ display:grid; grid-template-columns:repeat(4,1fr); gap:0; margin:32px 0 0; border:1px solid var(--line); }}
+  .stat {{ padding:18px 20px; border-left:1px solid var(--line); }} .stat:first-child {{ border-left:0; }}
+  .stat b {{ display:block; font-family:"Anton", Impact, sans-serif; font-weight:400; font-size:34px; line-height:1; }} .stat span {{ display:block; color:#444; font-size:14px; margin-top:8px; }} .stat small {{ display:block; font-size:12px; margin-top:6px; color:var(--or); letter-spacing:.06em; text-transform:uppercase; font-family:"Anton", Impact, sans-serif; }}
+  section {{ padding:56px 0; border-top:1px solid var(--line); }}
+  h2 {{ font-family:"Anton", Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:40px; line-height:1.05; margin:0 0 8px; }}
+  .sub {{ color:#444; max-width:760px; margin:0 0 26px; font-size:17px; }}
+  h4 {{ margin:0 0 12px; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--mut); font-family:"Anton", Impact, sans-serif; }} h4.after {{ color:var(--or); }}
+  .shot {{ border:1px solid var(--line); overflow:hidden; background:#fff; max-width:1000px; margin:0 auto; }} .shot img {{ display:block; width:100%; }}
+  .caption {{ font-size:14px; color:var(--mut); margin-top:10px; text-align:center; font-style:italic; }}
+  .stack .col + .col {{ margin-top:34px; }}
+  .grid {{ display:grid; grid-template-columns:repeat(3,1fr); gap:28px 24px; max-width:1000px; margin:0 auto; }}
+  .card .ph {{ display:block; aspect-ratio:1/1; display:flex; align-items:center; justify-content:center; }} .card .ph img {{ width:88%; height:92%; object-fit:contain; }}
+  .card .chips {{ display:flex; gap:6px; margin:8px 0 8px; }} .card .chips span {{ font-size:11px; letter-spacing:.08em; text-transform:uppercase; border:1px solid var(--ink); padding:3px 7px; font-family:"Anton", Impact, sans-serif; }}
+  .card .tt {{ font-family:"Anton", Impact, sans-serif; text-transform:uppercase; font-size:17px; letter-spacing:.02em; }}
+  .card .nt {{ font-style:italic; color:var(--or); font-size:16px; margin:2px 0 6px; }}
+  .card .pr {{ font-size:15px; }} .card .pr span {{ color:var(--mut); font-size:13px; margin-left:6px; }}
+  .card .qa {{ margin-top:10px; width:100%; height:42px; border:1px solid var(--ink); background:#fff; font-family:"Anton", Impact, sans-serif; letter-spacing:.08em; font-size:13px; cursor:pointer; }} .card .qa:hover {{ background:var(--ink); color:#fff; }}
+  .finder {{ border:1px solid var(--ink); padding:32px; display:grid; grid-template-columns:1fr 1fr; gap:32px; max-width:1000px; margin:0 auto; }}
+  .finder h3 {{ font-family:"Anton", Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:32px; margin:0 0 6px; }} .finder p {{ color:#444; margin:0 0 18px; font-style:italic; }}
+  .q {{ margin-bottom:14px; }} .q .l {{ font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--mut); margin-bottom:8px; font-family:"Anton", Impact, sans-serif; }}
+  .q .o {{ display:flex; gap:8px; flex-wrap:wrap; }} .q .o button {{ background:#fff; color:var(--ink); border:1px solid var(--ink); padding:9px 14px; font:15px "Fraunces", serif; cursor:pointer; }} .q .o button.on {{ background:var(--ink); color:#fff; }}
+  .res {{ background:var(--soft); padding:20px; display:flex; gap:20px; align-items:center; }} .res img {{ width:140px; height:160px; object-fit:contain; }}
+  .res .rt {{ font-family:"Anton", Impact, sans-serif; text-transform:uppercase; font-size:22px; }} .res .rn {{ font-style:italic; color:var(--or); font-size:17px; }} .res .rm {{ color:#444; font-size:14px; margin:4px 0 12px; }}
+  .btn {{ display:inline-block; background:var(--or); color:var(--ink); border:0; padding:0 22px; height:46px; line-height:46px; font-family:"Anton", Impact, sans-serif; letter-spacing:.08em; font-size:14px; text-transform:uppercase; cursor:pointer; text-decoration:none; }}
+  .pdp {{ display:grid; grid-template-columns:1.05fr 1fr; gap:40px; max-width:1100px; margin:0 auto; }}
+  .pdp .img {{ display:flex; align-items:center; justify-content:center; aspect-ratio:1/1; }} .pdp .img img {{ width:85%; height:95%; object-fit:contain; }}
+  .buy .vendor {{ font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--mut); font-family:"Anton", Impact, sans-serif; }}
+  .buy h3 {{ font-family:"Anton", Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:42px; line-height:1; margin:6px 0 8px; }}
+  .notes {{ font-size:24px; font-style:italic; color:var(--or); margin-bottom:14px; }}
+  .specs {{ border-top:1px solid var(--line); margin-bottom:18px; }} .specs div {{ display:grid; grid-template-columns:150px 1fr; gap:12px; padding:8px 0; border-bottom:1px solid var(--line); font-size:14px; }} .specs div b {{ font-family:"Anton", Impact, sans-serif; font-weight:400; text-transform:uppercase; letter-spacing:.1em; font-size:11px; color:var(--mut); padding-top:3px; }}
+  .opt {{ margin-bottom:14px; }} .opt .lbl {{ font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--mut); margin-bottom:8px; font-family:"Anton", Impact, sans-serif; }} .opt .lbl b {{ color:var(--ink); font-family:"Fraunces", serif; text-transform:none; letter-spacing:0; font-size:14px; }}
+  .pills {{ display:flex; gap:8px; flex-wrap:wrap; }} .pills button {{ border:1px solid var(--ink); background:#fff; padding:9px 14px; font:15px "Fraunces", serif; cursor:pointer; }} .pills button.on {{ background:var(--ink); color:#fff; }}
+  .plan {{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:14px 0; }} .plan label {{ border:1px solid var(--line); padding:12px 14px; cursor:pointer; font-size:15px; }} .plan label.on {{ border-color:var(--ink); }} .plan label b {{ display:block; font-family:"Anton", Impact, sans-serif; font-weight:400; text-transform:uppercase; letter-spacing:.04em; font-size:14px; }} .plan label span {{ color:var(--mut); font-size:13px; }}
+  .price {{ font-size:22px; margin:8px 0 4px; }} .price small {{ font-size:14px; color:var(--mut); margin-left:10px; font-style:italic; }}
+  .ship {{ font-size:15px; color:#333; margin-bottom:14px; }} .ship b {{ font-weight:600; }}
+  .atc {{ margin:12px 0 16px; }} .atc .btn {{ width:100%; text-align:center; height:52px; line-height:52px; font-size:15px; }}
+  .trust {{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:18px; }} .trust div {{ font-size:13px; color:#333; border:1px solid var(--line); padding:10px; text-align:center; }} .trust div b {{ display:block; font-family:"Anton", Impact, sans-serif; font-weight:400; text-transform:uppercase; letter-spacing:.06em; font-size:12px; }}
+  details {{ border-top:1px solid var(--line); padding:12px 0; }} details summary {{ cursor:pointer; list-style:none; display:flex; justify-content:space-between; font-family:"Anton", Impact, sans-serif; text-transform:uppercase; letter-spacing:.1em; font-size:12px; }} details summary::after {{ content:"+"; }} details[open] summary::after {{ content:"–"; }} details p {{ color:#333; font-size:15px; margin:8px 0 0; }}
+  .fixes {{ border:1px solid var(--line); max-width:1000px; margin:0 auto; }}
+  .fx {{ display:grid; grid-template-columns:36px 1fr auto; gap:14px; align-items:start; padding:16px 20px; border-top:1px solid var(--line); }} .fx:first-child {{ border-top:0; }}
+  .fx .n {{ font-family:"Anton", Impact, sans-serif; font-size:20px; color:var(--or); line-height:1.1; }} .fx b {{ display:block; font-family:"Anton", Impact, sans-serif; font-weight:400; text-transform:uppercase; letter-spacing:.03em; font-size:16px; }} .fx span {{ color:#444; font-size:15px; }} .fx .h {{ color:var(--mut); font-size:13px; white-space:nowrap; padding-top:4px; font-style:italic; }}
+  .total {{ display:flex; justify-content:space-between; align-items:center; padding:16px 20px; background:var(--soft); font-size:15px; }} .total b {{ font-family:"Anton", Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:16px; }}
+  .cta {{ background:var(--or); color:var(--ink); padding:40px; display:flex; justify-content:space-between; align-items:center; gap:24px; }}
+  .cta h2 {{ margin:0 0 6px; }} .cta p {{ margin:0; max-width:620px; font-size:17px; }} .cta .who {{ text-align:right; font-size:14px; }} .cta .who b {{ display:block; font-family:"Anton", Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:18px; }} .cta a {{ color:var(--ink); }}
+  footer {{ padding:28px 0 70px; color:var(--mut); font-size:13px; font-style:italic; }}
+  .sticky {{ position:fixed; left:0; right:0; bottom:0; background:#fff; border-top:1px solid var(--line); padding:10px 16px; display:none; align-items:center; gap:12px; z-index:30; }} .sticky img {{ width:44px; height:52px; object-fit:contain; }} .sticky .t {{ flex:1; font-size:13px; line-height:1.25; }} .sticky .t b {{ display:block; font-family:"Anton", Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:14px; }} .sticky .btn {{ height:42px; line-height:42px; padding:0 16px; }}
+  @media (max-width:860px) {{ h1 {{ font-size:40px; }} h2 {{ font-size:30px; }} .stats {{ grid-template-columns:1fr 1fr; }} .stat:nth-child(3) {{ border-left:0; }} .stat:nth-child(n+3) {{ border-top:1px solid var(--line); }} .grid {{ grid-template-columns:1fr 1fr; gap:20px 14px; }} .finder,.pdp {{ grid-template-columns:1fr; }} .fx {{ grid-template-columns:28px 1fr; }} .fx .h {{ grid-column:2; padding-top:0; }} .cta {{ flex-direction:column; align-items:flex-start; }} .cta .who {{ text-align:left; }} .sticky.show {{ display:flex; }} header.top nav {{ display:none; }} }}
+</style></head>
+<body>
+<div class="bar">Concept for duelingrabbits.com · built on the real catalog · by Andrei Pataleta</div>
+<header class="top"><div class="wrap"><div class="brand">Dueling Rabbits <span>redesign concept</span></div><nav><a href="#cards">Coffee cards</a><a href="#finder">Finder</a><a href="#pdp">Product page</a><a href="#fixes">Plan</a></nav></div></header>
+
+<div class="wrap hero">
+  <div class="eyebrow">Free first hour · built from the public store, no access</div>
+  <h1>Same roastery. Same bags. <em>Easier to pick a coffee.</em></h1>
+  <p class="lead">The store is fast and the bags look great. What's missing is the reason to click: tasting notes on the cards, a way to choose grind and size, a subscription, and a finder for people who don't know where to start.</p>
+  <div class="stats">
+    <div class="stat"><b>1.1s</b><span>home page load, 2.4 MB</span><small>Already fast, keep the theme</small></div>
+    <div class="stat"><b>Dawn 15.4</b><span>the live theme (named “Drive”), not Horizon</span><small>No switch needed</small></div>
+    <div class="stat"><b>0</b><span>tasting notes, roast or process on the cards</span><small>Already in your metafields</small></div>
+    <div class="stat"><b>0</b><span>grind, size or subscription options</span><small>Whole bean, one size, one-time</small></div>
+  </div>
+</div>
+
+<section id="cards"><div class="wrap">
+  <h2>Coffee cards</h2>
+  <p class="sub">Today a card is a bag and a price. The concept keeps your layout and adds what you already wrote in metafields: roast, process, tasting notes, and a quick add.</p>
+  <div class="stack">
+    <div class="col"><h4>Before</h4><div class="shot"><img src="before-cards.jpg" alt="Current product cards"></div><p class="caption">The shopper has to open every bag to learn what it tastes like.</p></div>
+    <div class="col"><h4 class="after" style="text-align:center">After</h4><div class="grid">{cards}</div></div>
+  </div>
+</div></section>
+
+<section id="finder"><div class="wrap">
+  <h2>Find your coffee</h2>
+  <p class="sub">“Start Here” links to a collection today. This is three questions on your real catalog. Try it.</p>
+  <div class="finder">
+    <div><h3>Find your coffee</h3><p>Three taps, one bag.</p>
+      <div class="q"><div class="l">1 · Taste</div><div class="o" data-k="taste"><button data-v="earthy" class="on">Chocolate &amp; nutty</button><button data-v="fruity">Fruity &amp; bright</button><button data-v="floral">Floral</button></div></div>
+      <div class="q"><div class="l">2 · Roast</div><div class="o" data-k="roast"><button data-v="any" class="on">Any</button><button data-v="Light">Light</button><button data-v="Medium">Medium</button></div></div>
+      <div class="q"><div class="l">3 · Budget</div><div class="o" data-k="budget"><button data-v="30" class="on">Under $30</button><button data-v="999">Show me the rare ones</button></div></div>
+    </div>
+    <div class="res" id="res"></div>
+  </div>
+</div></section>
+
+<section id="pdp"><div class="wrap">
+  <h2>Product page</h2>
+  <p class="sub">Your current page, then the concept on China - Ximeng Natural. Grind, size, subscribe and save, roast schedule, all above the fold. On a phone, scroll for the sticky Add to cart.</p>
+  <div class="stack">
+    <div class="col"><h4>Before</h4><div class="shot"><img src="before-pdp.jpg" alt="Current product page"></div><p class="caption">Good details, but no grind, no size, no subscription, and “Shipping calculated at checkout”.</p></div>
+    <div class="col"><h4 class="after" style="text-align:center">After</h4>
+      <div class="pdp">
+        <div class="img"><img src="{china['img']}" alt="China Ximeng Natural"></div>
+        <div class="buy">
+          <div class="vendor">Coffee · Light roast · Double anaerobic natural</div>
+          <h3>China - Ximeng Natural</h3>
+          <div class="notes">Red currant · Rum</div>
+          <div class="specs"><div><b>Origin</b>China · Ximeng, Yunnan</div><div><b>Producer</b>Torch Coffee</div><div><b>Variety</b>Catimor · 1,400–1,600 MASL</div><div><b>Brew</b>Pour over · AeroPress · French press</div></div>
+          <div class="opt"><div class="lbl">Grind: <b id="grind">Whole bean</b></div><div class="pills" data-k="grind"><button class="on">Whole bean</button><button>Pour over</button><button>Drip</button><button>Espresso</button><button>French press</button></div></div>
+          <div class="opt"><div class="lbl">Size: <b id="size">12 oz</b></div><div class="pills" data-k="size"><button class="on" data-p="24">12 oz · $24</button><button data-p="60">2 lb · $60</button></div></div>
+          <div class="plan"><label class="on" data-p="one"><b>One-time</b><span>Ships with the next roast</span></label><label data-p="sub"><b>Subscribe &amp; save 10%</b><span>Every 2 or 4 weeks, cancel anytime</span></label></div>
+          <div class="price" id="price">$24.00 USD <small>Free shipping over $50</small></div>
+          <div class="ship"><b>Roasted Thursday to Sunday.</b> Ships within 1–3 days of roasting, or pick up at 601 N. Market St.</div>
+          <div class="atc"><a class="btn" id="atc">Add to cart</a></div>
+          <div class="trust"><div><b>Roasted to order</b>Wilmington, DE</div><div><b>Free shipping</b>over $50</div><div><b>No blends</b>single origin only</div></div>
+          <details open><summary>Coffee story</summary><p>A double anaerobic natural from Ximeng in Yunnan, processed by Torch Coffee. Red currant up front, a rum-like sweetness in the finish.</p></details>
+          <details><summary>Brew guide</summary><p>Pour over 1:16 at 94°C, 3 minutes. AeroPress 15 g to 230 g, 2 minutes. French press 1:15, 4 minutes.</p></details>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<section id="fixes"><div class="wrap">
+  <h2>The plan</h2>
+  <p class="sub">On a duplicate theme, reviewed on a preview link, then live. Products, collections and metafields stay as they are.</p>
+  <div class="fixes">
+    <div class="fx"><div class="n">1</div><div><b>Keep the theme, redesign the sections</b><span>Your live theme is Dawn 15.4, not Horizon. It's fast and your metafields are wired in. A switch costs days and gains nothing.</span></div><div class="h">0 h</div></div>
+    <div class="fx"><div class="n">2</div><div><b>Cards with notes, roast, process, quick add</b><span>From the metafields you already fill in.</span></div><div class="h">4 h</div></div>
+    <div class="fx"><div class="n">3</div><div><b>Grind and size as variants</b><span>Whole bean, pour over, drip, espresso, French press. 12 oz and 2 lb. Set once for every coffee.</span></div><div class="h">3 h</div></div>
+    <div class="fx"><div class="n">4</div><div><b>Subscribe and save</b><span>Shopify Subscriptions, free app. Every 2 or 4 weeks, 10% off. The biggest lever for selling nationwide.</span></div><div class="h">3 h</div></div>
+    <div class="fx"><div class="n">5</div><div><b>Coffee finder</b><span>Three questions on your tags. Replaces the “Start Here” tile.</span></div><div class="h">4 h</div></div>
+    <div class="fx"><div class="n">6</div><div><b>Product page</b><span>Notes big, options up top, roast schedule and shipping promise, Junip stars under the title, brew guide, sticky Add to cart on mobile.</span></div><div class="h">5 h</div></div>
+    <div class="fx"><div class="n">7</div><div><b>Collection filters</b><span>Roast, process, taste, price. Today: availability and price only.</span></div><div class="h">2 h</div></div>
+    <div class="fx"><div class="n">8</div><div><b>Home page</b><span>Keep the hero, add a real H1 for Google (there is none today), the finder, best sellers with notes, the roastery story, pickup and events.</span></div><div class="h">4 h</div></div>
+    <div class="fx"><div class="n">9</div><div><b>SEO and speed pass</b><span>Titles and H1 on every template, alt text, lazy loading, product structured data so tasting notes show in Google.</span></div><div class="h">3 h</div></div>
+    <div class="fx"><div class="n">10</div><div><b>Testing and handover</b><span>Desktop and mobile, a test order, a short guide to editing the new sections.</span></div><div class="h">2 h</div></div>
+    <div class="total"><span>Three weeks, a preview link after each stage.</span><b>≈ 30 hours</b></div>
+  </div>
+</div></section>
+
+<section><div class="wrap"><div class="cta"><div><h2>One evening, no access.</h2><p>With theme access the cards and the grind options can be on a preview link this week. Full redesign in three weeks.</p></div><div class="who"><b>Andrei Pataleta</b>Full-stack engineer, ex-CTO · Miami<br><a href="https://andrewpataleta.com">andrewpataleta.com</a></div></div></div></section>
+<footer><div class="wrap">Prepared for Dueling Rabbits Coffee from the public store only. Product photos belong to Dueling Rabbits Coffee. Not indexed.</div></footer>
+<div class="sticky" id="sticky"><img src="{china['img']}" alt=""><div class="t"><b>China - Ximeng Natural</b><span id="stp">$24 · 12 oz · whole bean</span></div><a class="btn">Add to cart</a></div>
+<script>
+const COFFEES = {json.dumps(data)};
+const sel = {{taste:'earthy', roast:'any', budget:'30'}};
+document.querySelectorAll('.finder .o').forEach(g => g.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {{ g.querySelectorAll('button').forEach(x => x.classList.remove('on')); b.classList.add('on'); sel[g.dataset.k] = b.dataset.v; render(); }})));
+function render() {{
+  let list = COFFEES.filter(c => c.taste === sel.taste && (sel.roast === 'any' || c.roast === sel.roast) && c.p <= Number(sel.budget));
+  if (!list.length) list = COFFEES.filter(c => c.taste === sel.taste && c.p <= Number(sel.budget));
+  if (!list.length) list = COFFEES.filter(c => c.p <= Number(sel.budget));
+  if (sel.budget === '999') list = list.sort((a, b) => b.p - a.p);
+  const c = list[0];
+  document.getElementById('res').innerHTML = `<img src="${{c.img}}" alt=""><div><div class="rt">${{c.t}}</div><div class="rn">${{c.notes}}</div><div class="rm">${{c.roast}} roast · ${{c.proc}} · $${{c.p.toFixed(2)}} / 12 oz</div><a class="btn">Add to cart</a></div>`;
+}}
+render();
+let size = 24, plan = 'one';
+const priceEl = document.getElementById('price'), stp = document.getElementById('stp');
+function upd() {{ const p = plan === 'sub' ? size * 0.9 : size; priceEl.innerHTML = `$${{p.toFixed(2)}} USD <small>${{plan === 'sub' ? 'per delivery, cancel anytime' : 'Free shipping over $50'}}</small>`; stp.textContent = `$${{p.toFixed(0)}} · ${{document.getElementById('size').textContent}} · ${{document.getElementById('grind').textContent.toLowerCase()}}`; }}
+document.querySelectorAll('.pills').forEach(g => g.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {{ g.querySelectorAll('button').forEach(x => x.classList.remove('on')); b.classList.add('on'); if (g.dataset.k === 'grind') document.getElementById('grind').textContent = b.textContent; else {{ size = Number(b.dataset.p); document.getElementById('size').textContent = b.textContent.split(' · ')[0]; }} upd(); }})));
+document.querySelectorAll('.plan label').forEach(l => l.addEventListener('click', () => {{ document.querySelectorAll('.plan label').forEach(x => x.classList.remove('on')); l.classList.add('on'); plan = l.dataset.p; upd(); }}));
+const atc = document.getElementById('atc'), sticky = document.getElementById('sticky');
+new IntersectionObserver(([e]) => sticky.classList.toggle('show', !e.isIntersecting && e.boundingClientRect.top < 0)).observe(atc);
+document.querySelectorAll('.btn, .qa').forEach(b => {{ if (/add to cart/i.test(b.textContent)) b.addEventListener('click', ev => {{ ev.preventDefault(); const t = b.textContent; b.textContent = 'Added ✓'; setTimeout(() => b.textContent = t, 1200); }}); }});
+</script></body></html>'''
+open('site/index.html','w').write(html); print('built', len(html))
