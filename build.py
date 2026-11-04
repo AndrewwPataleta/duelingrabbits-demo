@@ -46,15 +46,15 @@ html=f'''<!doctype html>
   .card .nt {{ font-style:italic; color:var(--or); font-size:16px; margin:2px 0 6px; }}
   .card .pr {{ font-size:15px; }} .card .pr span {{ color:var(--mut); font-size:13px; margin-left:6px; }}
   .card .qa {{ margin-top:10px; width:100%; height:42px; border:1px solid var(--ink); background:#fff; font-family:"Anton", Impact, sans-serif; letter-spacing:.08em; font-size:13px; cursor:pointer; }} .card .qa:hover {{ background:var(--ink); color:#fff; }}
-  .finder {{ border:1px solid var(--ink); padding:32px; display:grid; grid-template-columns:1fr 1fr; gap:32px; max-width:1000px; margin:0 auto; }}
+  .finder {{ border:1px solid var(--ink); padding:32px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:32px; max-width:1000px; margin:0 auto; }}
   .finder h3 {{ font-family:"Anton", Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:32px; margin:0 0 6px; }} .finder p {{ color:#444; margin:0 0 18px; font-style:italic; }}
   .q {{ margin-bottom:14px; }} .q .l {{ font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--mut); margin-bottom:8px; font-family:"Anton", Impact, sans-serif; }}
   .q .o {{ display:flex; gap:8px; flex-wrap:wrap; }} .q .o button {{ background:#fff; color:var(--ink); border:1px solid var(--ink); padding:9px 14px; font:15px "Fraunces", serif; cursor:pointer; }} .q .o button.on {{ background:var(--ink); color:#fff; }}
-  .res {{ background:var(--soft); padding:20px; display:flex; gap:20px; align-items:center; }} .res img {{ width:140px; height:160px; object-fit:contain; }}
+  .res {{ background:var(--soft); padding:20px; display:flex; gap:20px; align-items:center; min-width:0; }} .res > div {{ min-width:0; }} .res img {{ width:140px; height:160px; object-fit:contain; }}
   .res .rt {{ font-family:"Anton", Impact, sans-serif; text-transform:uppercase; font-size:22px; }} .res .rn {{ font-style:italic; color:var(--or); font-size:17px; }} .res .rm {{ color:#444; font-size:14px; margin:4px 0 12px; }}
   .btn {{ display:inline-block; background:var(--or); color:var(--ink); border:0; padding:0 22px; height:46px; line-height:46px; font-family:"Anton", Impact, sans-serif; letter-spacing:.08em; font-size:14px; text-transform:uppercase; cursor:pointer; text-decoration:none; }}
-  .pdp {{ display:grid; grid-template-columns:1.05fr 1fr; gap:40px; max-width:1100px; margin:0 auto; }}
-  .pdp .img {{ display:flex; align-items:center; justify-content:center; aspect-ratio:1/1; }} .pdp .img img {{ width:85%; height:95%; object-fit:contain; }}
+  .pdp {{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:40px; max-width:1100px; margin:0 auto; }}
+  .pdp .img {{ display:flex; align-items:center; justify-content:center; aspect-ratio:1/1; min-width:0; }} .pdp .img img {{ max-width:85%; max-height:95%; object-fit:contain; }}
   .buy .vendor {{ font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--mut); font-family:"Anton", Impact, sans-serif; }}
   .buy h3 {{ font-family:"Anton", Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:42px; line-height:1; margin:6px 0 8px; }}
   .notes {{ font-size:24px; font-style:italic; color:var(--or); margin-bottom:14px; }}
